@@ -175,3 +175,14 @@ tieRatio <- sum(COD$Tie)/nrow(COD)
 Win%: 0.4265403
 Loss%: 0.5592417
 Tie%: 0.01421801
+
+## 4: Win or Lose Model
+```{r}
+COD <- COD %>%
+  mutate(Win = ifelse(Win == "Win", 1, 0))
+
+model1 <- lm(Eliminations ~ Win, data = COD)
+summary(model1)
+```
+
+
