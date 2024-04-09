@@ -130,12 +130,14 @@ ggplot(data = COD, mapping = aes(x = Damage))+
 
 Based on the visualization we can learn from the distribution of Damage. Based on the histogram, in most instances Damage was between 250 and 500 per game.
 
-## FullPartial - Ayla Orona
+### FullPartial - Ayla Orona
+
 ```{r}
 sum(is.na(COD$FullPartial))
 ```
 
 There is not missing data for the FullPartial column in the data set.
+
 ```{r}
 COD %>%
   group_by(FullPartial)%>%
@@ -152,6 +154,54 @@ ggplot(data = COD, mapping = aes(x = FullPartial, y = Eliminations))+
 ```
 
 Based on this visualization, we can see the differences in the amount of eliminations based on whether the game was full or partial. If the game was full, the elimination mean was 15, however, if it was partial, the mean was around 8. This could possibly due to the fact that because the player was playing a full game, their eliminations would increase because they had a longer amount of time of playing the game. 
+
+### Game Type - Michael
+
+```{r}
+sum(is.na(COD$GameType))
+```
+
+```{r}
+gt_table <- COD %>%
+  group_by(GameType) %>%
+  summarise(N = n()) %>%
+  arrange(desc(N))
+
+gt_table$GameType <- c("Team Death Match", "Hardpoint", "Domination", "Kill Confirmed")
+
+gt_table %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Table for Game Type",
+    col.names = c("Map", "Total Games Played"),
+    align = c("l", rep("c", 2)),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic(lightable_options = "striped",
+                            latex_options = c("scale_down", "HOLD_position"))
+```
+
+```{r}
+gt_labs <- c("Domination", "Hardpoint", "Kill Confirmed", "Team Death Match")
+
+ggplot(data = COD, mapping = aes(x = GameType, fill = GameType)) +
+  geom_bar() + 
+  labs(x = "Game Type", 
+       y = "Games Played", 
+       title = "Number of Games per Game Type",
+       subtitle = "Call of Duty") +
+  theme(
+    plot.title = element_text(size = 16L,
+                              face = "bold",
+                              hjust = 0.5),
+    plot.subtitle = element_text(size = 12L,
+                                 hjust = 0.5),
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12),
+    legend.position = "none") + 
+    scale_x_discrete(labels= gt_labs)
+```
 
 I will do XPType and Map1
 
@@ -176,6 +226,10 @@ Win%: 0.4265403
 Loss%: 0.5592417
 Tie%: 0.01421801
 
+
+=======
+Michael will write
+
 ## 4: Win or Lose Model
 ```{r}
 COD <- COD %>%
@@ -184,5 +238,4 @@ COD <- COD %>%
 model1 <- lm(Eliminations ~ Win, data = COD)
 summary(model1)
 ```
-
 
