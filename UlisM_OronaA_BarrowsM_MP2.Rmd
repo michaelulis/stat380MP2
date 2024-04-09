@@ -1,0 +1,54 @@
+---
+title: "Untitled"
+author: "Maeric Barrows"
+date: "2024-04-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyr)
+library(dplyr)
+```
+
+## 1. Why not na.omit()?
+We would not want to use na.omit for this dataset because at least one instance of NA is present in every row. If we were to use na.omit, every single row would be removed from the table. The below function shows how many NAs are present in each row:
+
+```{r}
+countNA <- function(dat){
+  numNA <- sum(is.na(dat))
+  return(numNA)
+}
+
+# MARGIN = 1 allows this to countNA by row
+apply(X = COD, MARGIN = 1, FUN = countNA)
+```
+
+## 2. 6 Visualizations (My 2)
+
+Ayla did Damage and Full/Partial
+
+I will do XPType and Map1
+
+
+
+## 3. Exploring Result Column
+```{r}
+# Getting Wins, Losses, and Ties
+COD <- COD %>%
+  separate(Result, c("YourScore", "OtherScore")) %>%
+  mutate(Win = ifelse(YourScore > OtherScore, 1, 0),
+         Loss = ifelse(YourScore < OtherScore, 1, 0),
+         Tie = ifelse(YourScore == OtherScore, 1, 0))
+
+# Winning%
+winRatio <- sum(COD$Win)/nrow(COD)
+# Losing%
+lossRatio <- sum(COD$Loss)/nrow(COD)
+# Tie%
+tieRatio <- sum(COD$Tie)/nrow(COD)
+```
+
+Win%: 0.4265403
+Loss%: 0.5592417
+Tie%: 0.01421801
