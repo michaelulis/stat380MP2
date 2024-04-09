@@ -205,6 +205,63 @@ ggplot(data = COD, mapping = aes(x = GameType, fill = GameType)) +
 
 I will do XPType and Map1
 
+## XPType
+
+```{r}
+sum(is.na(COD$XPType))
+```
+There are no instances of NA in the XPType column.
+
+```{r}
+COD %>%
+  group_by(XPType)%>%
+  summarise(N=n())
+```
+XPType is a categorical variable that seems to measure what kind of boost a player would get to their XP given they win the game. Based on these summary statistics, 129 games played had an XPType of 10% Boost, while the remaining 82 had the Double XP + 10% XPType.
+
+```{r}
+ggplot(data = COD, mapping = aes(x = XPType, y = Score))+
+  geom_boxplot(fill="cyan") +
+  labs(x = "XP Type")
+```
+This boxplot shows performance, based on Score, of games with 10% Boost XPType versus games with Double XP + 10% XPType. Using the graph, we can see that, in general, this player performs better in games with Double XP + 10% XPType.
+
+## Map1
+
+```{r}
+sum(is.na(COD$Map1))
+```
+There are 43 instances of NA for the Map1 column.
+
+```{r}
+COD %>%
+  group_by(Map1)%>%
+  summarise(N=n()) %>%
+  arrange(desc(N))
+```
+
+This summary table shows every different map in the Map1 column. According to this data, with the exception of NA, The Pines showed up as Map1 the most, with 12 occurrences, followed by Moscow, with 11.
+
+```{r}
+ggplot(data = COD, mapping = aes(x = Map1, fill = Map1)) +
+  geom_bar() + 
+  labs(x = "Map", 
+       y = "Games Played", 
+       title = "Number of Games per Map",
+       subtitle = "Call of Duty") +
+  theme(
+    plot.title = element_text(size = 16L,
+                              face = "bold",
+                              hjust = 0.5),
+    plot.subtitle = element_text(size = 12L,
+                                 hjust = 0.5),
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12),
+    axis.text.x = element_text(angle = 45, hjust=1), 
+    legend.position = "none")
+```
+
+This graph further shows the times each map was Map1.
 
 ## 3. Exploring Result Column
 ```{r}
