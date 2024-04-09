@@ -26,7 +26,53 @@ apply(X = COD, MARGIN = 1, FUN = countNA)
 
 ## 2. 6 Visualizations (My 2)
 
-Ayla did Damage and Full/Partial
+### Damage - Ayla Orona
+
+```{r}
+sum(is.na(COD$Damage))
+```
+There is 0 missing Damage data in the table.
+
+```{r}
+COD %>%
+  summarize(mean = mean(Damage),
+            median = median(Damage),
+            StandardD = sd(Damage),
+            min = min(Damage),
+            max = max(Damage))
+```
+
+The variable Damage is quantitative data, meaning its type of data is only integers. For the Damage column, the mean is 415.16, the median is 397, the standard deviation is 166.31, the min is 56, and the max is 960.
+
+```{r}
+ggplot(data = COD, mapping = aes(x = Damage))+
+  geom_histogram(color = "black", fill = "blue")
+```
+
+Based on the visualization we can learn from the distribution of Damage. Based on the histogram, in most instances Damage was between 250 and 500 per game.
+
+## FullPartial - Ayla Orona
+```{r}
+sum(is.na(COD$FullPartial))
+```
+
+There is not missing data for the FullPartial column in the data set.
+```{r}
+COD %>%
+  group_by(FullPartial)%>%
+  summarise(N=n())
+  
+```
+
+Based on the summary statistics of the FullPartial column, we can determine that 191 instances were Full and 20 were partial.
+
+```{r}
+#full or partial based on eliminations
+ggplot(data = COD, mapping = aes(x = FullPartial, y = Eliminations))+
+  geom_boxplot()
+```
+
+Based on this visualization, we can see the differences in the amount of eliminations based on whether the game was full or partial. If the game was full, the elimination mean was 15, however, if it was partial, the mean was around 8. This could possibly due to the fact that because the player was playing a full game, their eliminations would increase because they had a longer amount of time of playing the game. 
 
 I will do XPType and Map1
 
