@@ -7,8 +7,87 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(tidyr)
-library(dplyr)
+```
+
+## Front Matter
+```{r loadPackages, message = FALSE, warning=FALSE}
+#Load packages with groundhog to improve stability
+library(tidyverse)
+library(rvest)
+library(ggplot2)
+library(lubridate)
+library(kableExtra)
+```
+
+## Read in Data Set/Data Wrangling - Michael
+
+```{r}
+COD1 <- read_html(
+  x = "https://docs.google.com/spreadsheets/d/1Wv5dlzCYv37aY58MF9nuuYJbHRBWm_dQ/edit?usp=sharing&ouid=106338911046216482900&rtpof=true&sd=true"
+) %>%
+  html_elements(css = "table") %>%
+  html_table()
+
+COD1 <- COD1[[1]]
+
+COD2 <- read_html(
+  x = "https://docs.google.com/spreadsheets/d/1Ora5ZiTjb2qrmqPV6P1wh7CyJweHpw7NJ1kxXWVodfk/edit?usp=sharing"
+) %>%
+  html_elements(css = "table") %>%
+  html_table()
+
+COD2 <- COD2[[1]]
+
+COD3 <- read_html(
+  x = "https://docs.google.com/spreadsheets/d/1ZlUHg4408PpJlFJeXENcqujAI7LWRL0o8ElHciJNlEw/edit?usp=sharing"
+) %>%
+  html_elements(css = "table") %>%
+  html_table()
+
+COD3 <- COD3[[1]]
+
+colnames(COD1) <- COD1[1,]
+
+colnames(COD2) <- COD2[1,]
+
+colnames(COD3) <- COD3[1,]
+
+COD1 <- COD1[-1, ]
+
+COD1 <- COD1[-1, ]
+
+COD1 <- COD1[, -1]
+
+COD2 <- COD2[-1, ]
+
+COD2 <- COD2[, -1]
+
+COD3 <- COD3[-1, ]
+
+COD3 <- COD3[, -1]
+
+COD3 <- COD3[-(14:99),]
+
+COD <- full_join(COD1, COD2)
+
+COD <- full_join(COD, COD3)
+
+COD[COD == ""] <- NA
+
+COD$Eliminations <- as.numeric(COD$Eliminations)
+
+COD$Deaths <- as.numeric(COD$Deaths)
+
+COD$Score <- as.numeric(COD$Score)
+
+COD$TotalXP <- as.numeric(COD$TotalXP)
+
+COD$Damage <- as.numeric(COD$Damage)
+
+COD <- COD %>%
+  separate(Result, c("YourScore", "OtherScore"))
+
+glimpse(COD)
 ```
 
 ## 1. Why not na.omit()?
@@ -31,12 +110,10 @@ Ayla did Damage and Full/Partial
 I will do XPType and Map1
 
 
-
 ## 3. Exploring Result Column
 ```{r}
 # Getting Wins, Losses, and Ties
 COD <- COD %>%
-  separate(Result, c("YourScore", "OtherScore")) %>%
   mutate(Win = ifelse(YourScore > OtherScore, 1, 0),
          Loss = ifelse(YourScore < OtherScore, 1, 0),
          Tie = ifelse(YourScore == OtherScore, 1, 0))
