@@ -114,12 +114,25 @@ sum(is.na(COD$Damage))
 There is 0 missing Damage data in the table.
 
 ```{r}
-COD %>%
+table_1 <- COD %>%
   summarize(mean = mean(Damage),
             median = median(Damage),
             StandardD = sd(Damage),
             min = min(Damage),
             max = max(Damage))
+
+table_1
+
+table_1 %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Table for Damage per Game",
+    col.names = c("Mean","Median", "Standard Deviation", "Minimum","Maximum"),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic(lightable_options = "striped",
+                            latex_options = c("scale_down", "HOLD_position"))
 ```
 
 The variable Damage is quantitative data, meaning its type of data is only integers. For the Damage column, the mean is 415.16, the median is 397, the standard deviation is 166.31, the min is 56, and the max is 960.
@@ -140,10 +153,21 @@ sum(is.na(COD$FullPartial))
 There is not missing data for the FullPartial column in the data set.
 
 ```{r}
-COD %>%
+table_2 <- COD %>%
   group_by(FullPartial)%>%
   summarise(N=n())
   
+table_2 %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Table for Game Length",
+    col.names = c("Game Length", "Total Games Played"),
+    align = c("l", rep("c", 2)),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic(lightable_options = "striped",
+                            latex_options = c("scale_down", "HOLD_position"))
 ```
 
 Based on the summary statistics of the FullPartial column, we can determine that 191 instances were Full and 20 were partial.
@@ -161,6 +185,8 @@ Based on this visualization, we can see the differences in the amount of elimina
 ```{r}
 sum(is.na(COD$GameType))
 ```
+
+There are no instances of NA in the GameType column.
 
 ```{r}
 gt_table <- COD %>%
@@ -183,6 +209,8 @@ gt_table %>%
                             latex_options = c("scale_down", "HOLD_position"))
 ```
 
+Based on the summary statistics of the GameType column, we can determine that 187 instances were Team Deathmatch and 8 were Hardpoint, 3 were Domination, and 3 were Kill Confirmed.
+
 ```{r}
 gt_labs <- c("Domination", "Hardpoint", "Kill Confirmed", "Team Death Match")
 
@@ -204,6 +232,8 @@ ggplot(data = COD, mapping = aes(x = GameType, fill = GameType)) +
     scale_x_discrete(labels= gt_labs)
 ```
 
+This table and visualization help show the number of games played by this player for every game mode available in Call of Duty. As you can see, this player played Team Deathmatch significantly more than any other game mode.
+
 ### XPType - Maeric
 
 ```{r}
@@ -212,9 +242,21 @@ sum(is.na(COD$XPType))
 There are no instances of NA in the XPType column.
 
 ```{r}
-COD %>%
+table_3 <- COD %>%
   group_by(XPType)%>%
   summarise(N=n())
+
+table_3 %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Table for XP Boost Type",
+    col.names = c("XP Boost Type", "Total Games Played"),
+    align = c("l", rep("c", 2)),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic(lightable_options = "striped",
+                            latex_options = c("scale_down", "HOLD_position"))
 ```
 
 XPType is a categorical variable that seems to measure what kind of boost a player would get to their XP given they win the game. Based on these summary statistics, 129 games played had an XPType of 10% Boost, while the remaining 82 had the Double XP + 10% XPType.
@@ -234,10 +276,22 @@ sum(is.na(COD$Map1))
 There are 43 instances of NA for the Map1 column.
 
 ```{r}
-COD %>%
+table_4 <- COD %>%
   group_by(Map1)%>%
   summarise(N=n()) %>%
   arrange(desc(N))
+
+table_4 %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Table for Map1",
+    col.names = c("Map", "Total Games Played"),
+    align = c("l", rep("c", 2)),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic(lightable_options = "striped",
+                            latex_options = c("scale_down", "HOLD_position"))
 ```
 
 This summary table shows every different map in the Map1 column. According to this data, with the exception of NA, The Pines showed up as Map1 the most, with 12 occurrences, followed by Moscow, with 11.
@@ -263,7 +317,7 @@ ggplot(data = COD, mapping = aes(x = Map1, fill = Map1)) +
 
 This graph further shows the times each map was Map1.
 
-### Map1 - Maeric
+### Map2 - Michael
 
 ```{r}
 sum(is.na(COD$Map2))
@@ -271,10 +325,22 @@ sum(is.na(COD$Map2))
 There are 43 instances of NA for the Map2 column.
 
 ```{r}
-COD %>%
+table_5 <- COD %>%
   group_by(Map2)%>%
   summarise(N=n()) %>%
   arrange(desc(N))
+
+table_5 %>%
+  kable(
+    digits = 2,
+    format.args = list(big.mark = ","),
+    caption = "Summary Table for Map2",
+    col.names = c("Map", "Total Games Played"),
+    align = c("l", rep("c", 2)),
+    booktabs = TRUE
+  ) %>%
+  kableExtra::kable_classic(lightable_options = "striped",
+                            latex_options = c("scale_down", "HOLD_position"))
 ```
 
 This summary table shows every different map in the Map1 column. According to this data, with the exception of NA, Crossroads Strike showed up as Map2 the most, with 12 occurrences, followed by Cartel and Yamantau which are tied at 10.
@@ -314,13 +380,15 @@ winRatio <- sum(COD$Win)/nrow(COD)
 lossRatio <- sum(COD$Loss)/nrow(COD)
 # Tie%
 tieRatio <- sum(COD$Tie)/nrow(COD)
+
+winRatio
+lossRatio
+tieRatio
 ```
 
 Win%: 0.4265403
 Loss%: 0.5592417
 Tie%: 0.01421801
-
-Michael will write
 
 ## 4: Win or Lose Model
 ```{r}
@@ -328,6 +396,6 @@ Michael will write
 model1 <- lm(Win ~ Eliminations + Deaths, data = COD)
 summary(model1)
 ```
+
 In this model, we are exploring the relationship between Win and Eliminations and Damage. If 
 eliminations increases by one then the percentage of winning increases by 1.6%. If damage increases by one winning decreases by 0.14%. 
-
