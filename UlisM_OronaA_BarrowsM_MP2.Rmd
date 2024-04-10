@@ -370,8 +370,8 @@ This graph further shows the times each map was Map2.
 ```{r}
 # Getting Wins, Losses, and Ties
 COD <- COD %>%
-  mutate(Win = ifelse(YourScore > OtherScore, 1, 0),
-         Loss = ifelse(YourScore < OtherScore, 1, 0),
+  mutate(Win = ifelse(YourScore < OtherScore, 1, 0),
+         Loss = ifelse(YourScore > OtherScore, 1, 0),
          Tie = ifelse(YourScore == OtherScore, 1, 0))
 
 # Winning%
@@ -393,9 +393,9 @@ Tie%: 0.01421801
 ## 4: Win or Lose Model
 ```{r}
 
-model1 <- lm(Win ~ Eliminations + Deaths, data = COD)
+model1 <- glm(Win ~ Eliminations + Deaths, family = binomial, data = COD)
 summary(model1)
 ```
 
-In this model, we are exploring the relationship between Win and Eliminations and Damage. If 
-eliminations increases by one then the percentage of winning increases by 1.6%. If damage increases by one winning decreases by 0.14%. 
+In this model, we are exploring the relationship between Win and Eliminations and Deaths. If 
+eliminations increases by one then the percentage of winning increases by 10.9%. If your deaths increases by one winning decreases by 7.6%. 
