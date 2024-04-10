@@ -386,8 +386,8 @@ lossRatio
 tieRatio
 ```
 
-Win%: 0.4265403
-Loss%: 0.5592417
+Win%: 0.5592417
+Loss%: 0.4265403
 Tie%: 0.01421801
 
 ## 4: Win or Lose Model
