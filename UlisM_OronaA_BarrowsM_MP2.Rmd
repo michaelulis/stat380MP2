@@ -399,3 +399,9 @@ summary(model1)
 
 In this model, we are exploring the relationship between Win and Eliminations and Deaths. If 
 eliminations increases by one then the percentage of winning increases by 10.9%. If your deaths increases by one winning decreases by 7.6%. 
+
+## Team Contributions
+Our team split up the assignment like last time. Everyone took two variables to summarize. Maeric worked on question one and three. Michael helped with setting up the data so everyone can use it with Github. Ayla was also in charge of the logistic model for question 4.
+
+
+
